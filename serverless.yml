@@ -8,6 +8,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     DB_CONNECTION_STRING: ${file(./.env.yaml):${self:provider.stage}.DB_CONNECTION_STRING}
+    CHRIS_USER_ID: ${file(./.env.yaml):${self:provider.stage}.CHRIS_USER_ID}
 
 package:
   exclude:
@@ -26,6 +27,13 @@ functions:
       - http:
           path: words/{wordId}
           method: get
+  updateWordConfidence:
+    handler: controllers/word.updateWordConfidence
+    events:
+      - http:
+          path: words/{wordId}
+          method: put
+
 
 plugins:
   - serverless-offline

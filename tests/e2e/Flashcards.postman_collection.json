@@ -74,6 +74,80 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Update Word Confidence",
+			"item": [
+				{
+					"name": "Update Word Confidence HTE (success)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"direction\": \"hebrewToEnglish\",\n\t\"value\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/words/{{wordId}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"words",
+								"{{wordId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Word Confidence ETH (success)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"direction\": \"englishToHebrew\",\n\t\"value\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/words/{{wordId}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"words",
+								"{{wordId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -100,7 +174,7 @@
 	],
 	"variable": [
 		{
-			"id": "8046a4b3-d77c-4fdc-9f77-c6ac476f0722",
+			"id": "79edf793-cdb8-4cc4-b3b1-2474611052f3",
 			"key": "wordId",
 			"value": "5a9439a24e443d2b5c9d7aad",
 			"type": "string"

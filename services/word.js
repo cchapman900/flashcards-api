@@ -1,4 +1,5 @@
 const Word = require('../models/word');
+const WordConfidence = require('../models/wordConfidence');
 
 class WordService {
   constructor(db) {
@@ -21,6 +22,25 @@ class WordService {
     console.log(word);
 
     return word;
+  }
+
+  async updateWordConfidence(wordId, userId, direction, value) {
+
+    const update = direction === 'hebrewToEnglish' ? {hebrewToEnglish: value} : {englishToHebrew: value};
+
+    console.log(update);
+
+    try {
+      const updatedWordConfidence = await WordConfidence.findOneAndUpdate(
+        {_id: wordId, user: userId},
+        update,
+        {upsert: true, new: true}
+      );
+
+      return updatedWordConfidence;
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
 

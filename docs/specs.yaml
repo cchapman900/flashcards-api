@@ -2,7 +2,7 @@ openapi: "3.0.0"
 info:
   version: 1.0.0
   title: Flashcards API
-  description: An API that allows user to do quick math operations and track progress
+  description: An API that allows user to do language-learning flashcards
   contact:
     name: Chris Chapman
     email: chrischapman900@gmail.com
@@ -22,6 +22,12 @@ paths:
           required: false
           schema:
             type: string
+        - name: confidenceMax
+          in: query
+          description: Maximum value of the confidence allowed (to filter out known words)
+          required: false
+          schema:
+            type: string
         - name: limit
           in: query
           description: How many items to return at one time (max 100)
@@ -36,7 +42,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Word"
+                  $ref: "#/components/schemas/WordConfidence"
         default:
           description: unexpected error
           content:
@@ -62,7 +68,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Word"
+                $ref: "#/components/schemas/WordConfidence"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      summary: Update Word Confidence
+      operationId: updateWordConfidence
+      tags:
+        - Words
+      requestBody:
+        description: The confidence to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfidenceRequestPayload'
+      responses:
+        '200':
+          description: The requested Word
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WordConfidence'
         default:
           description: unexpected error
           content:
@@ -82,8 +113,8 @@ components:
         - partOfSpeech
       properties:
         id:
-          type: integer
-          format: int64
+          type: string
+          example: 5a9439a24e443d2b5c9d7aaf
         hebrew:
           type: string
           example: נתן
@@ -103,43 +134,48 @@ components:
         - name
       properties:
         id:
-          type: integer
-          format: int64
-        hebrew:
           type: string
-          example: נתן
-        english:
+          example: 5a9439a24e443d2b5c9d7aaf
+        name:
           type: string
-          example: to give, put, set
-        count:
-          type: integer
-          example: 2140
-        partOfSpeech:
-          type: string
-          example: verb
+          example: Chris
 
     WordConfidence:
+      required:
+        - word
+        - confidence
+      properties:
+        word:
+          $ref: '#/components/schemas/Word'
+        hebrewToEnglish:
+          type: integer
+          example: 4
+        englishToHebrew:
+          type: integer
+          example: 4
+
+    ConfidenceRequestPayload:
       required:
         - word
         - mode
         - overallResults
       properties:
-        word:
-          $ref: "#/components/schemas/Word"
-        user:
-          $ref: "#/components/schemas/User"
-        mode:
-          properties:
-            direction:
-              type: string
-              example: hebrewToEnglish
-              enum:
-                - hebrewToEnglish
-                - englishToHebrew
-            value:
-              description: On a scale from 1-5 on how confident about a word
-              type: integer
-              example: 4
+        wordId:
+          type: string
+          example: 5a9439a24e443d2b5c9d7aaf
+        userId:
+          type: string
+          example: 5a9439a24e443d2b5c9d7aaf
+        direction:
+          type: string
+          example: hebrewToEnglish
+          enum:
+            - hebrewToEnglish
+            - englishToHebrew
+        value:
+          description: On a scale from 1-5 on how confident about a word
+          type: integer
+          example: 4
 
     Error:
       required:

@@ -7,7 +7,6 @@ const schema = new mongoose.Schema({
   partOfSpeech: 'string'
 });
 
-
 let word;
 if (mongoose.models.Word) {
   word = mongoose.model('Word');

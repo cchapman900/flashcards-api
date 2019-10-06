@@ -1,17 +1,13 @@
 'use strict';
 
+const Helper = require('./_helper');
+const Test = require('../services/test');
+
 module.exports.hello = async event => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+
+  const response = Test.hello();
+
+  return Helper.createResponse(200, response);
 
   // Use this code if you don't use the http event with the LAMBDA-PROXY integration
   // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };

@@ -1,0 +1,16 @@
+{
+  "name": "flashcards-api",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chris Chapman",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-offline": "^5.12.0"
+  }
+}

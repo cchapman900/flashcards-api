@@ -1,0 +1,324 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Simple Math Refresher API
+  description: An API that allows user to do quick math operations and track progress
+  contact:
+    name: Chris Chapman
+    email: chrischapman900@gmail.com
+    url: http://chrischapman.co
+paths:
+  /questions:
+    get:
+      summary: List questions
+      description: List all questions, with optional search by operation
+      operationId: listQuestions
+      tags:
+        - Questions
+      parameters:
+        - name: operation
+          in: query
+          description: What type of operation to return
+          required: false
+          schema:
+            type: string
+        - name: numberFilter
+          in: query
+          description: A filter of what numbers should be included (e.g. only 7's)
+          required: false
+          schema:
+            type: integer
+            example: 7
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A paged array of Questions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionPerformance"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /questions/{question_id}:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        description: The id of the question
+        schema:
+          type: integer
+    get:
+      summary: Get question
+      operationId: getQuestion
+      tags:
+        - Questions
+      responses:
+        '200':
+          description: The requested Question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionPerformance"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /performance:
+    parameters:
+      - name: operationFilter
+        in: query
+        description: A filter of what operation should be included (e.g. only addition)
+        required: false
+        schema:
+          type: string
+          example: addition
+      - name: numberFilter
+        in: query
+        description: A filter of what numbers should be included (e.g. only 7's)
+        required: false
+        schema:
+          type: integer
+          example: 7
+    get:
+      summary: Get collective performance
+      operationId: getPerformance
+      tags:
+        - Collective Performance
+      responses:
+        '200':
+          description: Performance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/QuestionPerformance"
+  /performance/session:
+    parameters:
+      - name: operationFilter
+        in: query
+        description: A filter of what operation should be included (e.g. only addition)
+        required: false
+        schema:
+          type: string
+          example: addition
+      - name: numberFilter
+        in: query
+        description: A filter of what numbers should be included (e.g. only 7's)
+        required: false
+        schema:
+          type: integer
+          example: 7
+    delete:
+      summary: Clear collective session performance
+      operationId: clearSessionPerformance
+      tags:
+        - Collective Performance
+      responses:
+        '204':
+          description: Successfully cleared
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /performance/overall:
+    parameters:
+      - name: operationFilter
+        in: query
+        description: A filter of what operation should be included (e.g. only addition)
+        required: false
+        schema:
+          type: string
+          example: addition
+      - name: numberFilter
+        in: query
+        description: A filter of what numbers should be included (e.g. only 7's)
+        required: false
+        schema:
+          type: integer
+          example: 7
+    delete:
+      summary: Clear collective overall performance
+      operationId: clearAllOverallPerformance
+      tags:
+        - Collective Performance
+      responses:
+        '204':
+          description: Successfully cleared
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /performance/{question_id}:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        description: The id of the question
+        schema:
+          type: integer
+    get:
+      summary: Get question performance
+      operationId: getQuestionPerformance
+      tags:
+        - Question Performance
+      responses:
+        '200':
+          description: Performance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionPerformance"
+    put:
+      summary: Answer question
+      operationId: answerQuestion
+      tags:
+        - Question Performance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Response'
+      responses:
+        '204':
+          description: Successfully cleared
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /performance/{question_id}/session:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        description: The id of the question
+        schema:
+          type: integer
+    delete:
+      summary: Clear question session performance
+      operationId: clearQuestionSessionPerformance
+      tags:
+        - Question Performance
+      responses:
+        '204':
+          description: Successfully cleared
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /performance/{question_id}/overall:
+    parameters:
+      - name: question_id
+        in: path
+        required: true
+        description: The id of the question
+        schema:
+          type: integer
+    delete:
+      summary: Clear question overall performance
+      operationId: clearQuestionOverallPerformance
+      tags:
+        - Question Performance
+      responses:
+        '204':
+          description: Successfully cleared
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+
+    Question:
+      required:
+        - id
+        - firstNumber
+        - secondNumber
+        - operation
+        - answer
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstNumber:
+          type: integer
+          example: 3
+        secondNumber:
+          type: integer
+          example: 2
+        operation:
+          type: string
+          example: multiply
+        answer:
+          type: number
+          example: 6
+
+    QuestionPerformance:
+      required:
+        - question
+        - sessionResults
+        - overallResults
+      properties:
+        question:
+          $ref: "#/components/schemas/Question"
+        sessionResults:
+          $ref: "#/components/schemas/Results"
+        overallResults:
+          $ref: "#/components/schemas/Results"
+
+    Results:
+      required:
+        - correct
+        - incorrect
+      properties:
+        correct:
+          description: The total number of correct responses
+          type: integer
+          example: 8
+        incorrect:
+          description: The total number of incorrect responses
+          type: integer
+          example: 2
+
+    Response:
+      properties:
+        answer:
+          type: number
+          example: 42
+        isCorrect:
+          type: boolean
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

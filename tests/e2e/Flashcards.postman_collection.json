@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "a4fe0728-5c4c-4a8b-a0a9-cc57d052ba18",
+		"name": "Flashcards",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Words",
+			"item": [
+				{
+					"name": "Get Words (success)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/words",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"words"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Words w/ partOfSpeech (success)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/words?partOfSpeech=noun",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"words"
+							],
+							"query": [
+								{
+									"key": "partOfSpeech",
+									"value": "noun"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Get Word",
+			"item": [
+				{
+					"name": "Get Word (success)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain}}/words/{{wordId}}",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"words",
+								"{{wordId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "45569356-2782-4c8e-b1ad-6796f2792faf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5d66ff1a-98c6-4d2f-8234-f523749157cd",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8046a4b3-d77c-4fdc-9f77-c6ac476f0722",
+			"key": "wordId",
+			"value": "5a9439a24e443d2b5c9d7aad",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

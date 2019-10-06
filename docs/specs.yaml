@@ -1,34 +1,27 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: Simple Math Refresher API
+  title: Flashcards API
   description: An API that allows user to do quick math operations and track progress
   contact:
     name: Chris Chapman
     email: chrischapman900@gmail.com
     url: http://chrischapman.co
 paths:
-  /questions:
+  /words:
     get:
-      summary: List questions
-      description: List all questions, with optional search by operation
-      operationId: listQuestions
+      summary: List words
+      description: List all word, with optional search by part of speech
+      operationId: listWords
       tags:
-        - Questions
+        - Words
       parameters:
-        - name: operation
+        - name: partOfSpeech
           in: query
-          description: What type of operation to return
+          description: What type of partOfSpeech to return
           required: false
           schema:
             type: string
-        - name: numberFilter
-          in: query
-          description: A filter of what numbers should be included (e.g. only 7's)
-          required: false
-          schema:
-            type: integer
-            example: 7
         - name: limit
           in: query
           description: How many items to return at one time (max 100)
@@ -37,212 +30,39 @@ paths:
             type: integer
       responses:
         '200':
-          description: A paged array of Questions
+          description: A paged array of Words
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/QuestionPerformance"
+                  $ref: "#/components/schemas/Word"
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /questions/{question_id}:
+  /words/{word_id}:
     parameters:
-      - name: question_id
+      - name: word_id
         in: path
         required: true
-        description: The id of the question
+        description: The id of the word
         schema:
           type: integer
     get:
-      summary: Get question
-      operationId: getQuestion
+      summary: Get word
+      operationId: getWord
       tags:
-        - Questions
+        - Words
       responses:
         '200':
-          description: The requested Question
+          description: The requested Word
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuestionPerformance"
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /performance:
-    parameters:
-      - name: operationFilter
-        in: query
-        description: A filter of what operation should be included (e.g. only addition)
-        required: false
-        schema:
-          type: string
-          example: addition
-      - name: numberFilter
-        in: query
-        description: A filter of what numbers should be included (e.g. only 7's)
-        required: false
-        schema:
-          type: integer
-          example: 7
-    get:
-      summary: Get collective performance
-      operationId: getPerformance
-      tags:
-        - Collective Performance
-      responses:
-        '200':
-          description: Performance
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/QuestionPerformance"
-  /performance/session:
-    parameters:
-      - name: operationFilter
-        in: query
-        description: A filter of what operation should be included (e.g. only addition)
-        required: false
-        schema:
-          type: string
-          example: addition
-      - name: numberFilter
-        in: query
-        description: A filter of what numbers should be included (e.g. only 7's)
-        required: false
-        schema:
-          type: integer
-          example: 7
-    delete:
-      summary: Clear collective session performance
-      operationId: clearSessionPerformance
-      tags:
-        - Collective Performance
-      responses:
-        '204':
-          description: Successfully cleared
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /performance/overall:
-    parameters:
-      - name: operationFilter
-        in: query
-        description: A filter of what operation should be included (e.g. only addition)
-        required: false
-        schema:
-          type: string
-          example: addition
-      - name: numberFilter
-        in: query
-        description: A filter of what numbers should be included (e.g. only 7's)
-        required: false
-        schema:
-          type: integer
-          example: 7
-    delete:
-      summary: Clear collective overall performance
-      operationId: clearAllOverallPerformance
-      tags:
-        - Collective Performance
-      responses:
-        '204':
-          description: Successfully cleared
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /performance/{question_id}:
-    parameters:
-      - name: question_id
-        in: path
-        required: true
-        description: The id of the question
-        schema:
-          type: integer
-    get:
-      summary: Get question performance
-      operationId: getQuestionPerformance
-      tags:
-        - Question Performance
-      responses:
-        '200':
-          description: Performance
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/QuestionPerformance"
-    put:
-      summary: Answer question
-      operationId: answerQuestion
-      tags:
-        - Question Performance
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Response'
-      responses:
-        '204':
-          description: Successfully cleared
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /performance/{question_id}/session:
-    parameters:
-      - name: question_id
-        in: path
-        required: true
-        description: The id of the question
-        schema:
-          type: integer
-    delete:
-      summary: Clear question session performance
-      operationId: clearQuestionSessionPerformance
-      tags:
-        - Question Performance
-      responses:
-        '204':
-          description: Successfully cleared
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-  /performance/{question_id}/overall:
-    parameters:
-      - name: question_id
-        in: path
-        required: true
-        description: The id of the question
-        schema:
-          type: integer
-    delete:
-      summary: Clear question overall performance
-      operationId: clearQuestionOverallPerformance
-      tags:
-        - Question Performance
-      responses:
-        '204':
-          description: Successfully cleared
+                $ref: "#/components/schemas/Word"
         default:
           description: unexpected error
           content:
@@ -253,64 +73,73 @@ paths:
 components:
   schemas:
 
-    Question:
+    Word:
       required:
         - id
-        - firstNumber
-        - secondNumber
-        - operation
-        - answer
+        - hebrew
+        - english
+        - count
+        - partOfSpeech
       properties:
         id:
           type: integer
           format: int64
-        firstNumber:
-          type: integer
-          example: 3
-        secondNumber:
-          type: integer
-          example: 2
-        operation:
+        hebrew:
           type: string
-          example: multiply
-        answer:
-          type: number
-          example: 6
+          example: נתן
+        english:
+          type: string
+          example: to give, put, set
+        count:
+          type: integer
+          example: 2140
+        partOfSpeech:
+          type: string
+          example: verb
 
-    QuestionPerformance:
+    User:
       required:
-        - question
-        - sessionResults
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+        hebrew:
+          type: string
+          example: נתן
+        english:
+          type: string
+          example: to give, put, set
+        count:
+          type: integer
+          example: 2140
+        partOfSpeech:
+          type: string
+          example: verb
+
+    WordConfidence:
+      required:
+        - word
+        - mode
         - overallResults
       properties:
-        question:
-          $ref: "#/components/schemas/Question"
-        sessionResults:
-          $ref: "#/components/schemas/Results"
-        overallResults:
-          $ref: "#/components/schemas/Results"
-
-    Results:
-      required:
-        - correct
-        - incorrect
-      properties:
-        correct:
-          description: The total number of correct responses
-          type: integer
-          example: 8
-        incorrect:
-          description: The total number of incorrect responses
-          type: integer
-          example: 2
-
-    Response:
-      properties:
-        answer:
-          type: number
-          example: 42
-        isCorrect:
-          type: boolean
+        word:
+          $ref: "#/components/schemas/Word"
+        user:
+          $ref: "#/components/schemas/User"
+        mode:
+          properties:
+            direction:
+              type: string
+              example: hebrewToEnglish
+              enum:
+                - hebrewToEnglish
+                - englishToHebrew
+            value:
+              description: On a scale from 1-5 on how confident about a word
+              type: integer
+              example: 4
 
     Error:
       required:

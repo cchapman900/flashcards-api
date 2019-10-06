@@ -5,14 +5,22 @@ class WordService {
     this.db = db;
   }
 
-  async getWords() {
-    const words = await Word.find();
+  async getWords(partOfSpeech) {
+    let query = partOfSpeech ? {partOfSpeech: partOfSpeech} : {};
+
+    console.log(query);
+
+    const words = await Word.find(query);
 
     return words;
   }
 
-  async getWord(id) {
-    return await Word.findOne({firstNumber: id});
+  async getWord(wordId) {
+
+    const word = await Word.findById(wordId);
+    console.log(word);
+
+    return word;
   }
 }
 

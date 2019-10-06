@@ -7,8 +7,8 @@ const schema = new mongoose.Schema({
   partOfSpeech: 'string'
 });
 
-let word;
 
+let word;
 if (mongoose.models.Word) {
   word = mongoose.model('Word');
 } else {

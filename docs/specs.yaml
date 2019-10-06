@@ -43,9 +43,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /words/{word_id}:
+  /words/{wordId}:
     parameters:
-      - name: word_id
+      - name: wordId
         in: path
         required: true
         description: The id of the word

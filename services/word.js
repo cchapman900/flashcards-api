@@ -6,24 +6,42 @@ class WordService {
     this.db = db;
   }
 
-  async getWords(partOfSpeech) {
-    let query = partOfSpeech ? {partOfSpeech: partOfSpeech} : {};
+  /**
+   * GET WORDS
+   * @param partOfSpeech
+   * @param limit
+   * @returns {Promise<void>}
+   */
+  async getWords(partOfSpeech, limit) {
+    let query = {};
 
-    console.log(query);
+    if (partOfSpeech) {
+      query.partOfSpeech = partOfSpeech
+    }
 
-    const words = await Word.find(query);
-
-    return words;
+    return await Word.find(query)
+      .limit(limit)
+      .sort('-count');
   }
 
+
+  /**
+   * GET WORD
+   * @param wordId
+   * @returns {Promise<*>}
+   */
   async getWord(wordId) {
-
-    const word = await Word.findById(wordId);
-    console.log(word);
-
-    return word;
+    return await Word.findById(wordId);
   }
 
+  /**
+   * UPDATE WORD CONFIDENCE
+   * @param wordId
+   * @param userId
+   * @param direction
+   * @param value
+   * @returns {Promise<void>}
+   */
   async updateWordConfidence(wordId, userId, direction, value) {
 
     const update = direction === 'hebrewToEnglish' ? {hebrewToEnglish: value} : {englishToHebrew: value};
@@ -31,13 +49,11 @@ class WordService {
     console.log(update);
 
     try {
-      const updatedWordConfidence = await WordConfidence.findOneAndUpdate(
+      return await WordConfidence.findOneAndUpdate(
         {_id: wordId, user: userId},
         update,
         {upsert: true, new: true}
       );
-
-      return updatedWordConfidence;
     } catch (e) {
       console.error(e)
     }

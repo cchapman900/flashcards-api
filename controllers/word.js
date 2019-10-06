@@ -23,12 +23,14 @@ module.exports.getWords = async event => {
   try {
     const queryStringParameters = event.queryStringParameters;
     let partOfSpeech;
+    let limit = 10;
 
     if (queryStringParameters) {
       partOfSpeech = queryStringParameters.partOfSpeech;
+      limit = queryStringParameters.limit;
     }
 
-    const words = await wordService.getWords(partOfSpeech);
+    const words = await wordService.getWords(partOfSpeech, limit);
 
     return createResponse(200, words);
   } catch (e) {

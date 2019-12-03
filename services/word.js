@@ -28,10 +28,21 @@ class WordService {
   /**
    * GET WORD
    * @param wordId
+   * @param userId
    * @returns {Promise<*>}
    */
-  async getWord(wordId) {
-    return await Word.findById(wordId);
+  async getWord(wordId, userId) {
+    try {
+      return await WordConfidence
+        .findOneAndUpdate(
+        {word: wordId, user: userId},
+        {},
+        {upsert: true, new: true}
+        )
+        .populate('word');
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   /**
@@ -50,7 +61,7 @@ class WordService {
 
     try {
       return await WordConfidence.findOneAndUpdate(
-        {_id: wordId, user: userId},
+        {word: wordId, user: userId},
         update,
         {upsert: true, new: true}
       );

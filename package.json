@@ -6,6 +6,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "sls offline --port 3613",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chris Chapman",

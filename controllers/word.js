@@ -54,12 +54,13 @@ module.exports.getWord = async event => {
     // Get the path parameters
     const pathParams = event.pathParameters;
     const wordId = pathParams.wordId;
+    const userId = process.env.CHRIS_USER_ID; // Temporary until set up Auth0
 
     if (!wordId || !ObjectId.isValid(wordId)) {
       return createResponse(400, 'Word ID not valid');
     }
 
-    const word = await wordService.getWord(wordId);
+    const word = await wordService.getWord(wordId, userId);
 
     if (word) {
       return createResponse(200, word);

@@ -13,7 +13,8 @@ const wordService = new WordService(db);
  * @param {{
  *  queryStringParameters: {
  *    partOfSpeech: string
- *    confidenceMax: string
+ *    sessionConfidenceMax: number
+ *    overallConfidenceMax: number
  *    limit: number
  *  }
  * }} event
@@ -27,12 +28,11 @@ module.exports.getWords = async event => {
     const queryStringParameters = event.queryStringParameters || {};
 
     const partOfSpeech = queryStringParameters.partOfSpeech ? [queryStringParameters.partOfSpeech] : ['noun', 'verb', 'particle', 'adjective', 'pronoun'];
-    const confidenceMax = queryStringParameters.confidenceMax || 5;
+    const sessionConfidenceMax = queryStringParameters.sessionConfidenceMax || 5;
+    const overallConfidenceMax = queryStringParameters.overallConfidenceMax || 5;
     const limit = queryStringParameters.limit || 10;
 
-    console.log(queryStringParameters.partOfSpeech);
-
-    const words = await wordService.getWords(userId, partOfSpeech, confidenceMax, limit);
+    const words = await wordService.getWords(userId, partOfSpeech, sessionConfidenceMax, overallConfidenceMax, limit);
 
     return createResponse(200, words);
   } catch (e) {

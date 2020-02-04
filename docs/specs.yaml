@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 info:
-  version: 2.0.0
+  version: 2.0.1
   title: Flashcards API
   description: An API that allows user to do language-learning flashcards
   contact:
@@ -22,12 +22,18 @@ paths:
           required: false
           schema:
             type: string
-        - name: confidenceMax
+        - name: sessionConfidenceMax
           in: query
-          description: Maximum value of the confidence allowed (to filter out known words)
+          description: Maximum value of the session confidence allowed (to filter out known words)
           required: false
           schema:
-            type: string
+            type: integer
+        - name: overallConfidenceMax
+          in: query
+          description: Maximum value of the overall confidence allowed (to filter out known words)
+          required: false
+          schema:
+            type: integer
         - name: limit
           in: query
           description: How many items to return at one time (max 100)

@@ -5,24 +5,30 @@ class WordService {
 
   /**
    * GET WORDS
+   * @param userId
    * @param partOfSpeech
-   * @param confidenceMax
+   * @param sessionConfidenceMax
+   * @param overallConfidenceMax
    * @param limit
    * @returns {Promise<void>}
    */
-  async getWords(userId, partOfSpeech, confidenceMax, limit) {
+  async getWords(userId, partOfSpeech, sessionConfidenceMax, overallConfidenceMax, limit) {
     try {
 
       // Get the basic assessment content
-      const response = await this.db.query(
-        'SELECT id, hebrew, english, part_of_speech, count ' +
-        'FROM words ' +
-        'ORDER BY count DESC',
-        [partOfSpeech]
+      return await this.db.query(
+        'SELECT w.id, hebrew, english, part_of_speech, count, session_confidence, overall_confidence ' +
+        'FROM words w ' +
+        'LEFT JOIN confidence c ' +
+        'ON w.id = c.word_id ' +
+        'AND c.user_id = ? ' +
+        'WHERE part_of_speech in (?) ' +
+        'AND (session_confidence < ? OR session_confidence IS NULL) ' +
+        'AND (overall_confidence < ? OR overall_confidence IS NULL) ' +
+        'ORDER BY count DESC ' +
+        'LIMIT ?',
+        [userId, partOfSpeech, sessionConfidenceMax, overallConfidenceMax, limit]
       );
-
-      console.log(response)
-      return response;
 
     } catch (e) {
       console.log(e);

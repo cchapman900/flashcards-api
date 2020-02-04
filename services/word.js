@@ -1,6 +1,3 @@
-const Word = require('../models/word');
-const WordConfidence = require('../models/wordConfidence');
-
 class WordService {
   constructor(db) {
     this.db = db;
@@ -9,19 +6,27 @@ class WordService {
   /**
    * GET WORDS
    * @param partOfSpeech
+   * @param confidenceMax
    * @param limit
    * @returns {Promise<void>}
    */
-  async getWords(partOfSpeech, limit) {
-    let query = {};
+  async getWords(userId, partOfSpeech, confidenceMax, limit) {
+    try {
 
-    if (partOfSpeech) {
-      query.partOfSpeech = partOfSpeech
+      // Get the basic assessment content
+      const response = await this.db.query(
+        'SELECT id, hebrew, english, part_of_speech, count ' +
+        'FROM words ' +
+        'ORDER BY count DESC',
+        [partOfSpeech]
+      );
+
+      console.log(response)
+      return response;
+
+    } catch (e) {
+      console.log(e);
     }
-
-    return await Word.find(query)
-      .limit(limit)
-      .sort('-count');
   }
 
 

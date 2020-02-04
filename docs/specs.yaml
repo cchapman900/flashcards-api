@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 info:
-  version: 1.0.0
+  version: 2.0.0
   title: Flashcards API
   description: An API that allows user to do language-learning flashcards
   contact:
@@ -42,7 +42,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/WordConfidence"
+                  $ref: "#/components/schemas/Word"
         default:
           description: unexpected error
           content:
@@ -68,7 +68,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WordConfidence"
+                $ref: "#/components/schemas/Word"
         default:
           description: unexpected error
           content:
@@ -93,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WordConfidence'
+                $ref: '#/components/schemas/Word'
         default:
           description: unexpected error
           content:
@@ -114,7 +114,7 @@ components:
       properties:
         id:
           type: string
-          example: 5a9439a24e443d2b5c9d7aaf
+          example: 1
         hebrew:
           type: string
           example: נתן
@@ -127,6 +127,14 @@ components:
         partOfSpeech:
           type: string
           example: verb
+        sessionConfidence:
+          type: integer
+          example: 3
+          maximum: 5
+        overallConfidence:
+          type: integer
+          example: 3
+          maximum: 5
 
     User:
       required:
@@ -135,24 +143,10 @@ components:
       properties:
         id:
           type: string
-          example: 5a9439a24e443d2b5c9d7aaf
+          example: 42
         name:
           type: string
           example: Chris
-
-    WordConfidence:
-      required:
-        - word
-        - confidence
-      properties:
-        word:
-          $ref: '#/components/schemas/Word'
-        hebrewToEnglish:
-          type: integer
-          example: 4
-        englishToHebrew:
-          type: integer
-          example: 4
 
     ConfidenceRequestPayload:
       required:
@@ -166,12 +160,6 @@ components:
         userId:
           type: string
           example: 5a9439a24e443d2b5c9d7aaf
-        direction:
-          type: string
-          example: hebrewToEnglish
-          enum:
-            - hebrewToEnglish
-            - englishToHebrew
         value:
           description: On a scale from 1-5 on how confident about a word
           type: integer

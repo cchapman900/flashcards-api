@@ -1,11 +1,9 @@
 'use strict';
 
-const ObjectId = require('mongoose').Types.ObjectId;
-
 const createResponse = require('./_helper').createResponse;
 
 const WordService = require('../services/word');
-const db = require('../utils/db').connect();
+const db = require('../utils/db');
 const wordService = new WordService(db);
 
 
@@ -15,22 +13,26 @@ const wordService = new WordService(db);
  * @param {{
  *  queryStringParameters: {
  *    partOfSpeech: string
+ *    confidenceMax: string
+ *    limit: number
  *  }
  * }} event
  * @returns {Promise<{headers, statusCode}>}
  */
 module.exports.getWords = async event => {
   try {
-    const queryStringParameters = event.queryStringParameters;
-    let partOfSpeech;
-    let limit = 10;
 
-    if (queryStringParameters) {
-      partOfSpeech = queryStringParameters.partOfSpeech;
-      limit = queryStringParameters.limit;
-    }
+    const userId = 1;
 
-    const words = await wordService.getWords(partOfSpeech, limit);
+    const queryStringParameters = event.queryStringParameters || {};
+
+    const partOfSpeech = queryStringParameters.partOfSpeech ? [queryStringParameters.partOfSpeech] : ['noun', 'verb', 'particle', 'adjective', 'pronoun'];
+    const confidenceMax = queryStringParameters.confidenceMax || 5;
+    const limit = queryStringParameters.limit || 10;
+
+    console.log(queryStringParameters.partOfSpeech);
+
+    const words = await wordService.getWords(userId, partOfSpeech, confidenceMax, limit);
 
     return createResponse(200, words);
   } catch (e) {

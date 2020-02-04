@@ -12,7 +12,7 @@
   "author": "Chris Chapman",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.7.3",
+    "mysql": "^2.18.1",
     "serverless-offline": "^5.12.0"
   }
 }

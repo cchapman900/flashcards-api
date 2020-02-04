@@ -1,9 +1,12 @@
-const mongoose = require('mongoose');
-const Promise = require('bluebird');
-mongoose.Promise = Promise;
+const mysql = require('mysql');
+const { promisify } = require('util');
 
-const mongoString = process.env.DB_CONNECTION_STRING;
+const pool = mysql.createPool({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'root',
+  database : 'hebrew',
+  port     : '8889'
+});
 
-module.exports.connect = () => {
-  return mongoose.connect(mongoString, {useNewUrlParser: true});
-};
+exports.query = promisify(pool.query).bind(pool);

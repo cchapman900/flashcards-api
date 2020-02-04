@@ -7,7 +7,10 @@ provider:
   runtime: nodejs10.x
   stage: ${opt:stage, 'dev'}
   environment:
-    DB_CONNECTION_STRING: ${file(./.env.yaml):${self:provider.stage}.DB_CONNECTION_STRING}
+    PGUSER: ${file(./.env.yaml):${self:provider.stage}.POSTGRES.USER}
+    PGHOST: ${file(./.env.yaml):${self:provider.stage}.POSTGRES.HOST}
+    PGDATABASE: ${file(./.env.yaml):${self:provider.stage}.POSTGRES.DATABASE}
+    PGPORT: ${file(./.env.yaml):${self:provider.stage}.POSTGRES.PORT}
     CHRIS_USER_ID: ${file(./.env.yaml):${self:provider.stage}.CHRIS_USER_ID}
 
 package:

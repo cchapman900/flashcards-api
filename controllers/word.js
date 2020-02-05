@@ -23,7 +23,7 @@ const wordService = new WordService(db);
 module.exports.getWords = async event => {
   try {
 
-    const userId = 1;
+    const userId = process.env.CHRIS_USER_ID; // Temporary until set up Auth0
 
     const queryStringParameters = event.queryStringParameters || {};
 
@@ -57,10 +57,6 @@ module.exports.getWord = async event => {
     const pathParams = event.pathParameters;
     const wordId = pathParams.wordId;
     const userId = process.env.CHRIS_USER_ID; // Temporary until set up Auth0
-
-    if (!wordId || !ObjectId.isValid(wordId)) {
-      return createResponse(400, 'Word ID not valid');
-    }
 
     const word = await wordService.getWord(wordId, userId);
 
@@ -98,14 +94,9 @@ module.exports.updateWordConfidence = async event => {
     // Get the request body
     const request = JSON.parse(event.body);
     const userId = process.env.CHRIS_USER_ID; // Temporary until set up Auth0
-    const direction = request.direction;
     const value = request.value;
 
-    if (!wordId || !ObjectId.isValid(wordId) || !userId || !direction || !value) {
-      return createResponse(400, 'Invalid request');
-    }
-
-    const updateResponse = await wordService.updateWordConfidence(wordId, userId, direction, value);
+    const updateResponse = await wordService.updateWordConfidence(wordId, userId, value);
 
     if (updateResponse) {
       return createResponse(200, updateResponse);

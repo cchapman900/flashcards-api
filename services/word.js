@@ -15,7 +15,6 @@ class WordService {
   async getWords(userId, partOfSpeech, sessionConfidenceMax, overallConfidenceMax, limit) {
     try {
 
-      // Get the basic assessment content
       return await this.db.query(
         'SELECT w.id, hebrew, english, part_of_speech, count, session_confidence, overall_confidence ' +
         'FROM words w ' +
@@ -44,13 +43,17 @@ class WordService {
    */
   async getWord(wordId, userId) {
     try {
-      return await WordConfidence
-        .findOneAndUpdate(
-        {word: wordId, user: userId},
-        {},
-        {upsert: true, new: true}
-        )
-        .populate('word');
+
+      return await this.db.query(
+        'SELECT w.id, hebrew, english, part_of_speech, count, session_confidence, overall_confidence ' +
+        'FROM words w ' +
+        'LEFT JOIN confidence c ' +
+        'ON w.id = c.word_id ' +
+        'AND c.user_id = ? ' +
+        'WHERE w.id = ?',
+        [userId, wordId]
+      );
+
     } catch (e) {
       console.error(e)
     }
@@ -60,22 +63,19 @@ class WordService {
    * UPDATE WORD CONFIDENCE
    * @param wordId
    * @param userId
-   * @param direction
    * @param value
    * @returns {Promise<void>}
    */
-  async updateWordConfidence(wordId, userId, direction, value) {
-
-    const update = direction === 'hebrewToEnglish' ? {hebrewToEnglish: value} : {englishToHebrew: value};
-
-    console.log(update);
-
+  async updateWordConfidence(wordId, userId, value) {
     try {
-      return await WordConfidence.findOneAndUpdate(
-        {word: wordId, user: userId},
-        update,
-        {upsert: true, new: true}
+
+      return await this.db.query(
+        'INSERT INTO confidence(user_id, word_id, session_confidence, overall_confidence) ' +
+        'VALUES (?, ?, ?, ?) ' +
+        'ON DUPLICATE KEY UPDATE session_confidence = ?, overall_confidence = ?',
+        [userId, wordId, value, value, value, value]
       );
+
     } catch (e) {
       console.error(e)
     }
